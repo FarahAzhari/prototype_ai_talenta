@@ -566,129 +566,182 @@
           <section id="selection" class="card tab-content hidden">
             <div class="section-header">
               <div>
-                <div class="section-title">
-                  Smart Selection • Lowongan Kepala Bidang
-                </div>
-                <div class="small">Pool Kandidat: 24 pelamar internal</div>
-              </div>
-              <div>
-                <button
-                  class="px-4 py-2 bg-color text-white font-semibold rounded-lg transition"
-                  onclick="showMessage('Kirim Rekomendasi', 'Simulasi: Rekomendasi kandidat terbaik telah dikirim ke panel HR.')"
-                >
-                  Kirim Rekomendasi
-                </button>
+                <div class="section-title">Smart Selection</div>
+                <div class="small">Cari talenta terbaik menggunakan AI</div>
               </div>
             </div>
 
-            <table>
-              <thead>
-                <tr>
-                  <th>Nama</th>
-                  <th class="text-left">Skor AI</th>
-                  <th>Fairness</th>
-                  <th>Rekomendasi</th>
-                  <th class="text-left">Penjelasan (XAI)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Putri A</td>
-                  <td class="text-left">92</td>
-                  <td>
-                    <span class="fair text-green-600"
-                      ><span class="dot green"></span>Fair</span
-                    >
-                  </td>
-                  <td>Promosi</td>
-                  <td>
-                    <button
-                      onclick="showXAI('putri')"
-                      class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
-                    >
-                      Lihat Alasan
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Agus S</td>
-                  <td class="text-left">90</td>
-                  <td>
-                    <span class="fair text-yellow-600"
-                      ><span class="dot yellow"></span>Check</span
-                    >
-                  </td>
-                  <td>Rotasi</td>
-                  <td>
-                    <button
-                      onclick="showXAI('agus')"
-                      class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
-                    >
-                      Lihat Alasan
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Rina T</td>
-                  <td class="text-left">89</td>
-                  <td>
-                    <span class="fair text-green-600"
-                      ><span class="dot green"></span>Fair</span
-                    >
-                  </td>
-                  <td>Promosi</td>
-                  <td>
-                    <button
-                      onclick="showXAI('rina')"
-                      class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
-                    >
-                      Lihat Alasan
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Dedi R</td>
-                  <td class="text-left">88</td>
-                  <td>
-                    <span class="fair text-red-600"
-                      ><span class="dot red"></span>Bias Detected</span
-                    >
-                  </td>
-                  <td>Review</td>
-                  <td>
-                    <button
-                      onclick="showXAI('dedi')"
-                      class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
-                    >
-                      Lihat Alasan
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Sari L</td>
-                  <td class="text-left">86</td>
-                  <td>
-                    <span class="fair text-green-600"
-                      ><span class="dot green"></span>Fair</span
-                    >
-                  </td>
-                  <td>Promosi</td>
-                  <td>
-                    <button
-                      onclick="showXAI('sari')"
-                      class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
-                    >
-                      Lihat Alasan
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="search-form-container card mb-6">
+              <div class="search-form-group" style="flex-grow: 2">
+                <label for="posisi" class="search-label">Posisi Jabatan</label>
+                <input
+                  type="text"
+                  id="posisi"
+                  class="login-input"
+                  value="Kepala Bidang Pelayanan Publik"
+                />
+              </div>
+              <div class="search-form-group">
+                <label for="skor" class="search-label">Min. AI-Score</label>
+                <input
+                  type_="text"
+                  id="skor"
+                  class="login-input"
+                  value="85"
+                  style="max-width: 100px"
+                />
+              </div>
+              <div class="search-form-group" style="width: 100%">
+                <label class="search-label"
+                  >Kompetensi Kunci (Pilihan AI)</label
+                >
+                <div class="checkbox-grid">
+                  <label class="checkbox-label">
+                    <input type="checkbox" checked /> Leadership
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" checked /> Manajemen Proyek
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" /> Kebijakan Publik
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" /> Data Science
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center mb-6">
+              <button
+                id="search-talent-btn"
+                onclick="simulateAiSearch()"
+                class="px-6 py-3 bg-color text-white font-semibold rounded-lg transition text-base"
+              >
+                Cari Talenta (AI-Powered)
+              </button>
+            </div>
+            <div id="selection-results" class="hidden">
+              <div class="table-title mb-4">
+                Hasil Pencarian: 5 Kandidat Terbaik
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nama</th>
+                    <th class="text-left">Skor AI</th>
+                    <th>Fairness</th>
+                    <th>Rekomendasi</th>
+                    <th class="text-left">Penjelasan (XAI)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Putri A</td>
+                    <td class="text-left">92</td>
+                    <td>
+                      <span class="fair text-green-600"
+                        ><span class="dot green"></span>Fair</span
+                      >
+                    </td>
+                    <td>Promosi</td>
+                    <td>
+                      <button
+                        onclick="showXAI('putri')"
+                        class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
+                      >
+                        Lihat Alasan
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Agus S</td>
+                    <td class="text-left">90</td>
+                    <td>
+                      <span class="fair text-yellow-600"
+                        ><span class="dot yellow"></span>Check</span
+                      >
+                    </td>
+                    <td>Rotasi</td>
+                    <td>
+                      <button
+                        onclick="showXAI('agus')"
+                        class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
+                      >
+                        Lihat Alasan
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Rina T</td>
+                    <td class="text-left">89</td>
+                    <td>
+                      <span class="fair text-green-600"
+                        ><span class="dot green"></span>Fair</span
+                      >
+                    </td>
+                    <td>Promosi</td>
+                    <td>
+                      <button
+                        onclick="showXAI('rina')"
+                        class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
+                      >
+                        Lihat Alasan
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Dedi R</td>
+                    <td class="text-left">88</td>
+                    <td>
+                      <span class="fair text-red-600"
+                        ><span class="dot red"></span>Bias Detected</span
+                      >
+                    </td>
+                    <td>Review</td>
+                    <td>
+                      <button
+                        onclick="showXAI('dedi')"
+                        class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
+                      >
+                        Lihat Alasan
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Sari L</td>
+                    <td class="text-left">86</td>
+                    <td>
+                      <span class="fair text-green-600"
+                        ><span class="dot green"></span>Fair</span
+                      >
+                    </td>
+                    <td>Promosi</td>
+                    <td>
+                      <button
+                        onclick="showXAI('sari')"
+                        class="px-3 py-1 text-xs font-medium text-color rounded-full bg-indigo-50 hover:bg-indigo-100 transition"
+                      >
+                        Lihat Alasan
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
-            <div class="mt-4 text-xs text-gray-500">
-              Keterangan: Kolom Fairness menunjukkan hasil cek otomatis modul
-              fairness (warna hijau = OK, kuning = perlu verifikasi, merah =
-              potensi bias).
+              <div class="mt-4 text-xs text-gray-500">
+                Keterangan: Kolom Fairness menunjukkan hasil cek otomatis modul
+                fairness (warna hijau = OK, kuning = perlu verifikasi, merah =
+                potensi bias).
+              </div>
+
+              <div class="flex justify-end mt-6">
+                <button
+                  class="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg transition"
+                  onclick="showMessage('Kirim Rekomendasi', 'Simulasi: 5 kandidat terbaik telah dikirim ke panel HR.')"
+                >
+                  Kirim Rekomendasi ke Panel HR
+                </button>
+              </div>
             </div>
           </section>
 

@@ -465,6 +465,30 @@ function showXAI(person) {
   showMessage(title, content);
 }
 
+// --- Fungsi BARU untuk Simulasi Pencarian AI ---
+function simulateAiSearch() {
+  const resultsDiv = document.getElementById("selection-results");
+  const searchBtn = document.getElementById("search-talent-btn");
+
+  if (!resultsDiv || !searchBtn) return;
+
+  // 1. Sembunyikan hasil lama (jika ada) dan tampilkan loading
+  resultsDiv.classList.add("hidden");
+  searchBtn.disabled = true;
+  searchBtn.textContent = "Menganalisis Data Talenta...";
+
+  // 2. Simulasi AI bekerja (1.5 detik)
+  setTimeout(() => {
+    // 3. Tampilkan hasil
+    resultsDiv.classList.remove("hidden");
+    searchBtn.disabled = false;
+    searchBtn.textContent = "Cari Talenta (AI-Powered)";
+
+    // 4. (Opsional) Scroll ke hasil
+    resultsDiv.scrollIntoView({ behavior: "smooth" });
+  }, 1500); // 1.5 detik
+}
+
 // --- CHATBOT LOGIC ---
 const initialConversation = [
   {
