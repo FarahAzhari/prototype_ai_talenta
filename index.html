@@ -4,17 +4,15 @@
     <meta charset="utf-8" />
     <title>AI-Talenta — Prototype Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display.swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
 
   <body>
-    <!-- Message Box Overlay -->
     <div
       id="messageBox"
       class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden"
@@ -33,560 +31,666 @@
       </div>
     </div>
 
-    <!-- HEADER (Navigation Bar) -->
-    <header
-      class="sticky top-0 z-10 flex justify-between items-center px-4 md:px-6 py-3 border-b border-gray-200 bg-white shadow-md h-18"
-    >
-      <!-- LEFT SECTION: Hamburger + Brand -->
-      <div class="flex items-center space-x-4">
-        <!-- 1. Hamburger on the left (visible on mobile/tablet) -->
-        <button
-          class="text-2xl text-gray-700 transition lg:hidden hamburger-btn"
-          id="hamburgerBtn"
-          aria-label="Toggle menu"
-          aria-expanded="false"
-        >
-          &#9776;
-          <!-- Unicode ☰ -->
-        </button>
-
-        <!-- 2. Logo and Text (Brand) -->
-        <div class="flex items-center space-x-2" aria-label="brand">
-          <div
-            class="w-8 h-8 flex items-center justify-center bg-color text-white font-extrabold text-lg rounded-lg shadow-md flex-shrink-0"
-          >
-            AT
-          </div>
-          <div>
-            <div class="text-base font-bold text-gray-800 leading-tight">
-              AI-Talenta
-            </div>
-            <div class="text-xs text-gray-500 hidden sm:block leading-tight">
-              Empowering ASN with Intelligent Talent Analytics
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT SECTION: User Avatar and Dropdown -->
-      <div class="relative flex-shrink-0">
-        <button
-          id="avatarBtn"
-          class="w-10 h-10 bg-color text-white font-semibold text-sm rounded-full flex items-center justify-center custom-focus transition"
-          aria-label="User menu"
-          aria-haspopup="true"
-          aria-expanded="false"
-          onclick="toggleDropdown()"
-        >
-          <!-- User Icon (Lucide Icon/SVG) -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-        </button>
-
-        <!-- Dropdown Menu -->
-        <div
-          id="userDropdown"
-          class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 z-20 hidden overflow-hidden transition-all duration-200"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="avatarBtn"
-          onblur="hideDropdown()"
-        >
-          <!-- Role Display -->
-          <div
-            class="px-4 py-3 text-sm text-gray-700 border-b border-gray-100 font-semibold truncate"
-            role="none"
-          >
-            Admin • Kementerian
-          </div>
-          <!-- Menu Items -->
-          <a
-            href="#"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 text-color transition"
-            role="menuitem"
-            onclick="showMessage('Settings', 'Fitur pengaturan (Settings) belum tersedia di versi prototipe ini.'); toggleDropdown(); return false;"
-          >
-            Settings
-          </a>
-          <button
-            onclick="showMessage('Logout', 'Anda telah berhasil melakukan simulasi Logout.'); toggleDropdown();"
-            class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
-            role="menuitem"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- Backdrop for menu on mobile -->
     <div
-      class="backdrop"
-      id="mobileBackdrop"
-      tabindex="-1"
-      aria-hidden="true"
-      onclick="toggleSidebar()"
-    ></div>
+      id="login-page"
+      class="fixed inset-0 bg-gray-100 z-50 flex items-center justify-center p-4"
+    >
+      <div class="login-card">
+        <div class="login-brand">
+          <div class="login-brand-logo">AT</div>
+          <div class="login-brand-title">AI-Talenta</div>
+        </div>
 
-    <div class="container-layout">
-      <!-- SIDEBAR / NAV -->
-      <nav class="card" id="sideMenu" aria-label="Main navigation">
-        <div class="text-sm font-bold text-gray-900 mb-4">Menu</div>
-        <div class="menu" role="menu" aria-orientation="vertical">
-          <button
-            role="menuitem"
-            class="active"
-            onclick="show('dashboard', this)"
+        <div class="list-title mb-2 text-center">Selamat Datang</div>
+        <p class="small mb-4 text-center">Silakan login untuk melanjutkan.</p>
+
+        <p class="small mb-4 text-xs text-center">
+          Gunakan NIP di bawah ini untuk simulasi role:
+          <br />• <strong>Admin:</strong>
+          <code class="text-sm bg-gray-100 p-1 rounded">0000000000000001</code>
+          <br />• <strong>User:</strong>
+          <code class="text-sm bg-gray-100 p-1 rounded"
+            >198805012020012001</code
           >
-            Dashboard
-          </button>
-          <button role="menuitem" onclick="show('profil', this)">
-            Talent Profiling
-          </button>
-          <button role="menuitem" onclick="show('selection', this)">
-            Smart Selection
-          </button>
-          <button role="menuitem" onclick="show('career', this)">
-            Career Path
-          </button>
-          <button role="menuitem" onclick="show('login', this)">
-            Simulate Login
+        </p>
+
+        <div class="login-form">
+          <input
+            id="nip"
+            placeholder="Masukkan NIP (contoh: 198805012020012001)"
+            class="login-input"
+          />
+          <button
+            class="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition flex-shrink-0"
+            onclick="simulateLogin()"
+          >
+            Login
           </button>
         </div>
-        <div class="mt-8 text-xs text-gray-400">
-          Prototype: data simulasi • bukan sistem produksi
-        </div>
-      </nav>
+        <div id="loginMsg" class="login-message small mt-2 text-center"></div>
+      </div>
+    </div>
+    <div id="app-container" class="hidden">
+      <header
+        class="sticky top-0 z-10 flex justify-between items-center px-4 md:px-6 py-3 border-b border-gray-200 bg-white shadow-md h-18"
+      >
+        <div class="flex items-center space-x-4">
+          <button
+            class="text-2xl text-gray-700 transition lg:hidden hamburger-btn"
+            id="hamburgerBtn"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+          >
+            &#9776;
+          </button>
 
-      <!-- MAIN CONTENT AREA -->
-      <main>
-        <!-- Dashboard -->
-        <section id="dashboard" class="card tab-content">
-          <div class="section-header">
-            <div>
-              <div class="section-subtitle">Ringkasan Talenta</div>
-              <div class="section-title">Overview Nasional • Maret 2026</div>
-            </div>
-            <div class="header-pills hidden sm:flex">
-              <div class="muted-pill">ASN Terdaftar: 1.250.000</div>
-              <div class="muted-pill">Instansi Pilot: 2</div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="card h card-flex-1">
-              <div>
-                <div class="small">Rata-rata AI-Score</div>
-                <div class="big" id="avgScore">78.4</div>
-                <div class="small">Skor gabungan kompetensi & kinerja</div>
-              </div>
-              <div class="text-right">
-                <div class="small">Trend</div>
-                <div class="stat-trend-value font-bold">+1.8% MoM</div>
-              </div>
-            </div>
-
-            <div class="card h card-w-260">
-              <div>
-                <div class="small">Low Perf Risk</div>
-                <div class="big" id="lowRisk">2.4%</div>
-                <div class="small">Estimasi pegawai yang butuh intervensi</div>
-              </div>
-            </div>
-
-            <div class="card h card-w-260">
-              <div>
-                <div class="small">Open Roles</div>
-                <div class="big">1,120</div>
-                <div class="small">Posisi prioritas untuk rotasi/promosi</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mt-6">
-            <div class="card card-flex-1">
-              <div class="flex justify-between items-center mb-2">
-                <div class="table-title">
-                  Rata-rata Skor Kompetensi (5 Skill Utama)
-                </div>
-                <div class="small">Penilaian: Skala 0 - 100</div>
-              </div>
-
-              <!-- KETERANGAN / LEGEND BARU -->
-              <div
-                class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-600 mb-4"
-              >
-                <div class="flex items-center">
-                  <span
-                    class="dot green bg-green-500 w-3 h-3 flex-shrink-0"
-                  ></span>
-                  <span>Sangat Baik &gt;= 80</span>
-                </div>
-                <div class="flex items-center">
-                  <span
-                    class="dot blue bg-blue-500 w-3 h-3 flex-shrink-0"
-                  ></span>
-                  <span>Baik 70 - 79</span>
-                </div>
-                <div class="flex items-center">
-                  <span
-                    class="dot yellow bg-amber-500 w-3 h-3 flex-shrink-0"
-                  ></span>
-                  <span>Cukup 60 - 69</span>
-                </div>
-                <div class="flex items-center">
-                  <span class="dot red bg-red-500 w-3 h-3 flex-shrink-0"></span>
-                  <span>Perlu Peningkatan &lt; 60</span>
-                </div>
-              </div>
-              <!-- AKHIR KETERANGAN / LEGEND -->
-
-              <!-- CHART SVG AREA -->
-              <div
-                class="chart min-h-[200px] flex items-center justify-center bg-white rounded-lg"
-              >
-                <!-- SVG container for the chart -->
-                <svg id="competencyChart" class="w-full h-full"></svg>
-              </div>
-              <!-- END CHART SVG AREA -->
-            </div>
-
-            <div class="card card-w-360">
-              <div class="table-title mb-4">Peringkat Talenta (Top 5)</div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Nama</th>
-                    <th>Unit</th>
-                    <th class="text-right">AI-Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Putri A</td>
-                    <td>KemenKes</td>
-                    <td class="text-right font-semibold">92</td>
-                  </tr>
-                  <tr>
-                    <td>Agus S</td>
-                    <td>KemenPUPR</td>
-                    <td class="text-right font-semibold">90</td>
-                  </tr>
-                  <tr>
-                    <td>Rina T</td>
-                    <td>BKN</td>
-                    <td class="text-right font-semibold">89</td>
-                  </tr>
-                  <tr>
-                    <td>Dedi R</td>
-                    <td>KemenKeu</td>
-                    <td class="text-right font-semibold">88</td>
-                  </tr>
-                  <tr>
-                    <td>Sari L</td>
-                    <td>Kemendikbud</td>
-                    <td class="text-right font-semibold">86</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- Profil -->
-        <section id="profil" class="card tab-content hidden">
-          <div class="section-header">
-            <div>
-              <div class="section-title">Talent Profiling • Putri A</div>
-              <div class="small">
-                NIP: 19880501 202001 2 001 • Unit: KemenKes
-              </div>
-            </div>
-            <div>
-              <button
-                class="px-4 py-2 bg-color text-white font-semibold rounded-lg transition"
-                onclick="showMessage('Export PDF', 'Simulasi: Profil talenta Putri A telah diexport sebagai PDF.')"
-              >
-                Export Profile
-              </button>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="card-flex-1">
-              <div class="card profile p-6">
-                <div class="avatar">PA</div>
-                <div class="profile-info">
-                  <div class="profile-name">Putri Ayu</div>
-                  <div class="small">Senior Analyst • 12 tahun pengalaman</div>
-                  <div class="small profile-meta text-gray-600">
-                    AI-Score: <strong class="text-color no-hover">92</strong> •
-                    Potensi: Sangat Tinggi
-                  </div>
-                  <div class="profile-pill-wrapper">
-                    <span class="muted-pill bg-green-100 text-green-800"
-                      >Rekomendasi: Promosi struktural</span
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <div class="card mt-6">
-                <div class="table-title mb-4">Kompetensi Utama</div>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>Data Science</td>
-                      <td class="text-right">95</td>
-                    </tr>
-                    <tr>
-                      <td>Manajemen Proyek</td>
-                      <td class="text-right">90</td>
-                    </tr>
-                    <tr>
-                      <td>Public Policy</td>
-                      <td class="text-right">85</td>
-                    </tr>
-                    <tr>
-                      <td>Leadership</td>
-                      <td class="text-right">82</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="card-w-360">
-              <div class="card mb-6">
-                <div class="table-title mb-4">
-                  Kesenjangan Skill (Skill Gap)
-                </div>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>Data Engineering</td>
-                      <td class="text-right text-red-600 font-semibold">
-                        Butuh Diklat
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Public Speaking</td>
-                      <td class="text-right text-yellow-600 font-semibold">
-                        Rekomendasi Workshop
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="card">
-                <div class="list-title mb-4">Rekomendasi Pelatihan</div>
-                <ol>
-                  <li>Pelatihan Data Engineering (40 jam)</li>
-                  <li>Workshop Leadership for Public Sector (16 jam)</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Selection -->
-        <section id="selection" class="card tab-content hidden">
-          <div class="section-header">
-            <div>
-              <div class="section-title">
-                Smart Selection • Lowongan Kepala Bidang
-              </div>
-              <div class="small">Pool Kandidat: 24 pelamar internal</div>
-            </div>
-            <div>
-              <button
-                class="px-4 py-2 bg-color text-white font-semibold rounded-lg transition"
-                onclick="showMessage('Kirim Rekomendasi', 'Simulasi: Rekomendasi kandidat terbaik telah dikirim ke panel HR.')"
-              >
-                Kirim Rekomendasi
-              </button>
-            </div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Nama</th>
-                <th class="text-left">Skor AI</th>
-                <th>Fairness</th>
-                <th>Rekomendasi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Putri A</td>
-                <td class="text-left">92</td>
-                <td>
-                  <span class="fair text-green-600"
-                    ><span class="dot green"></span>Fair</span
-                  >
-                </td>
-                <td>Promosi</td>
-              </tr>
-              <tr>
-                <td>Agus S</td>
-                <td class="text-left">90</td>
-                <td>
-                  <span class="fair text-yellow-600"
-                    ><span class="dot yellow"></span>Check</span
-                  >
-                </td>
-                <td>Rotasi</td>
-              </tr>
-              <tr>
-                <td>Rina T</td>
-                <td class="text-left">89</td>
-                <td>
-                  <span class="fair text-green-600"
-                    ><span class="dot green"></span>Fair</span
-                  >
-                </td>
-                <td>Promosi</td>
-              </tr>
-              <tr>
-                <td>Dedi R</td>
-                <td class="text-left">88</td>
-                <td>
-                  <span class="fair text-red-600"
-                    ><span class="dot red"></span>Bias Detected</span
-                  >
-                </td>
-                <td>Review</td>
-              </tr>
-              <tr>
-                <td>Sari L</td>
-                <td class="text-left">86</td>
-                <td>
-                  <span class="fair text-green-600"
-                    ><span class="dot green"></span>Fair</span
-                  >
-                </td>
-                <td>Promosi</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="mt-4 text-xs text-gray-500">
-            Keterangan: Kolom Fairness menunjukkan hasil cek otomatis modul
-            fairness (warna hijau = OK, kuning = perlu verifikasi, merah =
-            potensi bias).
-          </div>
-        </section>
-
-        <!-- Career -->
-        <section id="career" class="card tab-content hidden">
-          <div class="section-header">
-            <div class="section-title">Career Path & Succession Planning</div>
-            <div class="small">Simulasi jalur karier untuk Putri A</div>
-          </div>
-
-          <div class="row">
-            <div class="card-flex-1">
-              <div class="list-title mb-4">Jalur Karier Rekomendasi</div>
-              <ol>
-                <li>Senior Analyst → Kepala Subbid (6–12 bln)</li>
-                <li>Kepala Subbid → Kepala Bidang (12–24 bln)</li>
-                <li>Kepala Bidang → Kepala Dinas (24–48 bln)</li>
-              </ol>
-              <div class="mt-4 text-sm text-gray-500">
-                Rekomendasi pelatihan yang disarankan disesuaikan dengan target
-                promosi.
-              </div>
-            </div>
-
-            <div class="card-w-320">
-              <div class="card p-4">
-                <div class="list-title mb-4">Succession Heatmap</div>
-                <div class="heatmap-placeholder h-40">
-                  [Succession Heatmap sim]
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Login -->
-        <section id="login" class="card tab-content hidden">
-          <div class="list-title mb-4">Simulate Login</div>
-          <div class="login-form">
-            <input
-              id="nip"
-              placeholder="Masukkan NIP (contoh: 198805012020012001)"
-              class="login-input"
-            />
-            <button
-              class="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition flex-shrink-0"
-              onclick="simulateLogin()"
+          <div class="flex items-center space-x-2" aria-label="brand">
+            <div
+              class="w-8 h-8 flex items-center justify-center bg-color text-white font-extrabold text-lg rounded-lg shadow-md flex-shrink-0"
             >
-              Login
+              AT
+            </div>
+            <div>
+              <div class="text-base font-bold text-gray-800 leading-tight">
+                AI-Talenta
+              </div>
+              <div class="text-xs text-gray-500 hidden sm:block leading-tight">
+                Empowering ASN with Intelligent Talent Analytics
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative flex-shrink-0">
+          <button
+            id="avatarBtn"
+            class="w-10 h-10 bg-color text-white font-semibold text-sm rounded-full flex items-center justify-center custom-focus transition"
+            aria-label="User menu"
+            aria-haspopup="true"
+            aria-expanded="false"
+            onclick="toggleDropdown()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </button>
+
+          <div
+            id="userDropdown"
+            class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 z-20 hidden overflow-hidden transition-all duration-200"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="avatarBtn"
+            onblur="hideDropdown()"
+          >
+            <div
+              class="px-4 py-3 text-sm text-gray-700 border-b border-gray-100 font-semibold truncate"
+              role="none"
+              id="dropdown-role-display"
+            >
+              Admin • Kementerian
+            </div>
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 text-color transition"
+              role="menuitem"
+              onclick="showMessage('Settings', 'Fitur pengaturan (Settings) belum tersedia di versi prototipe ini.'); toggleDropdown(); return false;"
+            >
+              Settings
+            </a>
+            <button
+              onclick="logout()"
+              class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
+              role="menuitem"
+            >
+              Logout
             </button>
           </div>
-          <div id="loginMsg" class="login-message small"></div>
-        </section>
+        </div>
+      </header>
 
-        <footer class="mt-6 text-center text-xs text-gray-500">
-          Prototype demo • AI-Talenta • Data simulasi
-        </footer>
-      </main>
-    </div>
-
-    <!-- CHATBOT floating -->
-    <div class="chatbot-container" aria-live="polite">
       <div
-        class="chatbot-window"
-        id="chatbotWindow"
+        class="backdrop"
+        id="mobileBackdrop"
+        tabindex="-1"
         aria-hidden="true"
-        role="dialog"
-        aria-modal="true"
-      >
-        <div class="chatbot-header">AI-Talenta Chatbot</div>
-        <div class="chatbot-body" id="chatbotBody">
-          <div class="p-2 text-center text-gray-500">
-            Selamat datang! Bagaimana saya bisa membantu Anda?
+        onclick="toggleSidebar()"
+      ></div>
+
+      <div class="container-layout">
+        <nav class="card" id="sideMenu" aria-label="Main navigation">
+          <div class="text-sm font-bold text-gray-900 mb-4">Menu</div>
+          <div class="menu" role="menu" aria-orientation="vertical">
+            <button
+              role="menuitem"
+              class="active"
+              onclick="show('dashboard', this)"
+            >
+              Dashboard
+            </button>
+            <button role="menuitem" onclick="show('profil', this)">
+              Talent Profiling
+            </button>
+            <button role="menuitem" onclick="show('selection', this)">
+              Smart Selection
+            </button>
+            <button role="menuitem" onclick="show('career', this)">
+              Career Path
+            </button>
           </div>
-        </div>
-        <div class="chatbot-input">
-          <input type="text" placeholder="Ketik pesan Anda..." id="chatInput" />
-          <button id="sendButton">Kirim</button>
-        </div>
+          <div class="mt-8 text-xs text-gray-400">
+            Prototype: data simulasi • bukan sistem produksi
+          </div>
+        </nav>
+
+        <main>
+          <section id="dashboard-admin" class="card tab-content">
+            <div class="section-header">
+              <div>
+                <div class="section-subtitle">Ringkasan Talenta</div>
+                <div class="section-title">Overview Nasional • Maret 2026</div>
+              </div>
+              <div class="header-pills hidden sm:flex">
+                <div class="muted-pill">ASN Terdaftar: 1.250.000</div>
+                <div class="muted-pill">Instansi Pilot: 2</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="card h card-flex-1">
+                <div>
+                  <div class="small">Rata-rata AI-Score</div>
+                  <div class="big" id="avgScore">78.4</div>
+                  <div class="small">Skor gabungan kompetensi & kinerja</div>
+                </div>
+                <div class="text-right">
+                  <div class="small">Trend</div>
+                  <div class="stat-trend-value font-bold">+1.8% MoM</div>
+                </div>
+              </div>
+
+              <div class="card h card-w-260">
+                <div>
+                  <div class="small">Low Perf Risk</div>
+                  <div class="big" id="lowRisk">2.4%</div>
+                  <div class="small">
+                    Estimasi pegawai yang butuh intervensi
+                  </div>
+                </div>
+              </div>
+
+              <div class="card h card-w-260">
+                <div>
+                  <div class="small">Open Roles</div>
+                  <div class="big">1,120</div>
+                  <div class="small">Posisi prioritas untuk rotasi/promosi</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-6">
+              <div class="card card-flex-1">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="table-title">
+                    Rata-rata Skor Kompetensi (5 Skill Utama)
+                  </div>
+                  <div class="small">Penilaian: Skala 0 - 100</div>
+                </div>
+
+                <div
+                  class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-600 mb-4"
+                >
+                  <div class="flex items-center">
+                    <span
+                      class="dot green bg-green-500 w-3 h-3 flex-shrink-0"
+                    ></span>
+                    <span>Sangat Baik &gt;= 80</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span
+                      class="dot blue bg-blue-500 w-3 h-3 flex-shrink-0"
+                    ></span>
+                    <span>Baik 70 - 79</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span
+                      class="dot yellow bg-amber-500 w-3 h-3 flex-shrink-0"
+                    ></span>
+                    <span>Cukup 60 - 69</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span
+                      class="dot red bg-red-500 w-3 h-3 flex-shrink-0"
+                    ></span>
+                    <span>Perlu Peningkatan &lt; 60</span>
+                  </div>
+                </div>
+                <div
+                  class="chart min-h-[200px] flex items-center justify-center bg-white rounded-lg"
+                >
+                  <svg id="competencyChart" class="w-full h-full"></svg>
+                </div>
+              </div>
+
+              <div class="card card-w-360">
+                <div class="table-title mb-4">Peringkat Talenta (Top 5)</div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nama</th>
+                      <th>Unit</th>
+                      <th class="text-right">AI-Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Putri A</td>
+                      <td>KemenKes</td>
+                      <td class="text-right font-semibold">92</td>
+                    </tr>
+                    <tr>
+                      <td>Agus S</td>
+                      <td>KemenPUPR</td>
+                      <td class="text-right font-semibold">90</td>
+                    </tr>
+                    <tr>
+                      <td>Rina T</td>
+                      <td>BKN</td>
+                      <td class="text-right font-semibold">89</td>
+                    </tr>
+                    <tr>
+                      <td>Dedi R</td>
+                      <td>KemenKeu</td>
+                      <td class="text-right font-semibold">88</td>
+                    </tr>
+                    <tr>
+                      <td>Sari L</td>
+                      <td>Kemendikbud</td>
+                      <td class="text-right font-semibold">86</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section id="dashboard-user" class="card tab-content hidden">
+            <div class="section-header">
+              <div>
+                <div class="section-title">
+                  Dashboard Kinerja Saya • Putri A
+                </div>
+                <div class="small">
+                  NIP: 19880501 202001 2 001 • Unit: KemenKes
+                </div>
+              </div>
+              <div>
+                <button
+                  class="px-4 py-2 bg-color text-white font-semibold rounded-lg transition"
+                  onclick="showMessage('Export PDF', 'Simulasi: Profil talenta Putri A telah diexport sebagai PDF.')"
+                >
+                  Export Profile
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="card-flex-1">
+                <div class="card profile p-6">
+                  <div class="avatar">PA</div>
+                  <div class="profile-info">
+                    <div class="profile-name">Putri Ayu</div>
+                    <div class="small">
+                      Senior Analyst • 12 tahun pengalaman
+                    </div>
+                    <div class="small profile-meta text-gray-600">
+                      AI-Score:
+                      <strong class="text-color no-hover">92</strong> • Potensi:
+                      Sangat Tinggi
+                    </div>
+                    <div class="profile-pill-wrapper">
+                      <span class="muted-pill bg-green-100 text-green-800"
+                        >Rekomendasi: Promosi struktural</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card mt-6">
+                  <div class="table-title mb-4">Kompetensi Utama</div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>Data Science</td>
+                        <td class="text-right">95</td>
+                      </tr>
+                      <tr>
+                        <td>Manajemen Proyek</td>
+                        <td class="text-right">90</td>
+                      </tr>
+                      <tr>
+                        <td>Public Policy</td>
+                        <td class="text-right">85</td>
+                      </tr>
+                      <tr>
+                        <td>Leadership</td>
+                        <td class="text-right">82</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card-w-360">
+                <div class="card mb-6">
+                  <div class="table-title mb-4">
+                    Kesenjangan Skill (Skill Gap)
+                  </div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>Data Engineering</td>
+                        <td class="text-right text-red-600 font-semibold">
+                          Butuh Diklat
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Public Speaking</td>
+                        <td class="text-right text-yellow-600 font-semibold">
+                          Rekomendasi Workshop
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="card">
+                  <div class="list-title mb-4">Rekomendasi Pelatihan</div>
+                  <ol>
+                    <li>Pelatihan Data Engineering (40 jam)</li>
+                    <li>Workshop Leadership for Public Sector (16 jam)</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="profil" class="card tab-content hidden">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Talent Profiling • Putri A</div>
+                <div class="small">
+                  NIP: 19880501 202001 2 001 • Unit: KemenKes
+                </div>
+              </div>
+              <div>
+                <button
+                  class="px-4 py-2 bg-color text-white font-semibold rounded-lg transition"
+                  onclick="showMessage('Export PDF', 'Simulasi: Profil talenta Putri A telah diexport sebagai PDF.')"
+                >
+                  Export Profile
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="card-flex-1">
+                <div class="card profile p-6">
+                  <div class="avatar">PA</div>
+                  <div class="profile-info">
+                    <div class="profile-name">Putri Ayu</div>
+                    <div class="small">
+                      Senior Analyst • 12 tahun pengalaman
+                    </div>
+                    <div class="small profile-meta text-gray-600">
+                      AI-Score:
+                      <strong class="text-color no-hover">92</strong> • Potensi:
+                      Sangat Tinggi
+                    </div>
+                    <div class="profile-pill-wrapper">
+                      <span class="muted-pill bg-green-100 text-green-800"
+                        >Rekomendasi: Promosi struktural</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card mt-6">
+                  <div class="table-title mb-4">Kompetensi Utama</div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>Data Science</td>
+                        <td class="text-right">95</td>
+                      </tr>
+                      <tr>
+                        <td>Manajemen Proyek</td>
+                        <td class="text-right">90</td>
+                      </tr>
+                      <tr>
+                        <td>Public Policy</td>
+                        <td class="text-right">85</td>
+                      </tr>
+                      <tr>
+                        <td>Leadership</td>
+                        <td class="text-right">82</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card-w-360">
+                <div class="card mb-6">
+                  <div class="table-title mb-4">
+                    Kesenjangan Skill (Skill Gap)
+                  </div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>Data Engineering</td>
+                        <td class="text-right text-red-600 font-semibold">
+                          Butuh Diklat
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Public Speaking</td>
+                        <td class="text-right text-yellow-600 font-semibold">
+                          Rekomendasi Workshop
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="card">
+                  <div class="list-title mb-4">Rekomendasi Pelatihan</div>
+                  <ol>
+                    <li>Pelatihan Data Engineering (40 jam)</li>
+                    <li>Workshop Leadership for Public Sector (16 jam)</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="selection" class="card tab-content hidden">
+            <div class="section-header">
+              <div>
+                <div class="section-title">
+                  Smart Selection • Lowongan Kepala Bidang
+                </div>
+                <div class="small">Pool Kandidat: 24 pelamar internal</div>
+              </div>
+              <div>
+                <button
+                  class="px-4 py-2 bg-color text-white font-semibold rounded-lg transition"
+                  onclick="showMessage('Kirim Rekomendasi', 'Simulasi: Rekomendasi kandidat terbaik telah dikirim ke panel HR.')"
+                >
+                  Kirim Rekomendasi
+                </button>
+              </div>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th class="text-left">Skor AI</th>
+                  <th>Fairness</th>
+                  <th>Rekomendasi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Putri A</td>
+                  <td class="text-left">92</td>
+                  <td>
+                    <span class="fair text-green-600"
+                      ><span class="dot green"></span>Fair</span
+                    >
+                  </td>
+                  <td>Promosi</td>
+                </tr>
+                <tr>
+                  <td>Agus S</td>
+                  <td class="text-left">90</td>
+                  <td>
+                    <span class="fair text-yellow-600"
+                      ><span class="dot yellow"></span>Check</span
+                    >
+                  </td>
+                  <td>Rotasi</td>
+                </tr>
+                <tr>
+                  <td>Rina T</td>
+                  <td class="text-left">89</td>
+                  <td>
+                    <span class="fair text-green-600"
+                      ><span class="dot green"></span>Fair</span
+                    >
+                  </td>
+                  <td>Promosi</td>
+                </tr>
+                <tr>
+                  <td>Dedi R</td>
+                  <td class="text-left">88</td>
+                  <td>
+                    <span class="fair text-red-600"
+                      ><span class="dot red"></span>Bias Detected</span
+                    >
+                  </td>
+                  <td>Review</td>
+                </tr>
+                <tr>
+                  <td>Sari L</td>
+                  <td class="text-left">86</td>
+                  <td>
+                    <span class="fair text-green-600"
+                      ><span class="dot green"></span>Fair</span
+                    >
+                  </td>
+                  <td>Promosi</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="mt-4 text-xs text-gray-500">
+              Keterangan: Kolom Fairness menunjukkan hasil cek otomatis modul
+              fairness (warna hijau = OK, kuning = perlu verifikasi, merah =
+              potensi bias).
+            </div>
+          </section>
+
+          <section id="career" class="card tab-content hidden">
+            <div class="section-header">
+              <div class="section-title">Career Path & Succession Planning</div>
+              <div class="small">Simulasi jalur karier untuk Putri A</div>
+            </div>
+
+            <div class="row">
+              <div class="card-flex-1">
+                <div class="list-title mb-4">Jalur Karier Rekomendasi</div>
+                <ol>
+                  <li>Senior Analyst → Kepala Subbid (6–12 bln)</li>
+                  <li>Kepala Subbid → Kepala Bidang (12–24 bln)</li>
+                  <li>Kepala Bidang → Kepala Dinas (24–48 bln)</li>
+                </ol>
+                <div class="mt-4 text-sm text-gray-500">
+                  Rekomendasi pelatihan yang disarankan disesuaikan dengan
+                  target promosi.
+                </div>
+              </div>
+
+              <div class="card-w-320">
+                <div class="card p-4">
+                  <div class="list-title mb-4">Succession Heatmap</div>
+                  <div class="heatmap-placeholder h-40">
+                    [Succession Heatmap sim]
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <footer class="mt-6 text-center text-xs text-gray-500">
+            Prototype demo • AI-Talenta • Data simulasi
+          </footer>
+        </main>
       </div>
 
-      <button
-        title="chatbot"
-        class="chatbot-toggle"
-        onclick="toggleChatbot()"
-        aria-label="Toggle chatbot"
-      >
-        <svg
-          class="chatbot-icon"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+      <div class="chatbot-container" aria-live="polite">
+        <div
+          class="chatbot-window"
+          id="chatbotWindow"
           aria-hidden="true"
+          role="dialog"
+          aria-modal="true"
         >
-          <path
-            d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM13 11H7V9H13V11ZM17 15H7V13H17V15ZM17 7H7V5H17V7Z"
-          />
-        </svg>
-      </button>
-    </div>
+          <div class="chatbot-header">AI-Talenta Chatbot</div>
+          <div class="chatbot-body" id="chatbotBody">
+            <div class="p-2 text-center text-gray-500">
+              Selamat datang! Bagaimana saya bisa membantu Anda?
+            </div>
+          </div>
+          <div class="chatbot-input">
+            <input
+              type="text"
+              placeholder="Ketik pesan Anda..."
+              id="chatInput"
+            />
+            <button id="sendButton">Kirim</button>
+          </div>
+        </div>
 
+        <button
+          title="chatbot"
+          class="chatbot-toggle"
+          onclick="toggleChatbot()"
+          aria-label="Toggle chatbot"
+        >
+          <svg
+            class="chatbot-icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM13 11H7V9H13V11ZM17 15H7V13H17V15ZM17 7H7V5H17V7Z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>

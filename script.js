@@ -1,11 +1,33 @@
 // --- JAVASCRIPT LOGIC ---
 
+// --- PERUBAHAN 1: Variabel Global untuk menyimpan Role ---
+let currentUserRole = "admin"; // Default role saat load
+
+// --- DOM Elements (dengan null checks) ---
+const loginPage = document.getElementById("login-page");
+const appContainer = document.getElementById("app-container");
 const sideMenu = document.getElementById("sideMenu");
 const backdrop = document.getElementById("mobileBackdrop");
 const hamburgerBtn = document.getElementById("hamburgerBtn");
 const sections = document.querySelectorAll(".tab-content");
 const menuButtons = document.querySelectorAll(".menu button");
 const svgNS = "http://www.w3.org/2000/svg";
+
+// Dropdown
+const userDropdown = document.getElementById("userDropdown");
+const avatarBtn = document.getElementById("avatarBtn");
+const dropdownRoleDisplay = document.getElementById("dropdown-role-display");
+
+// Message Box
+const messageBox = document.getElementById("messageBox");
+const messageBoxTitle = document.getElementById("messageBoxTitle");
+const messageBoxContent = document.getElementById("messageBoxContent");
+
+// Chatbot
+const chatbotWindow = document.getElementById("chatbotWindow");
+const chatbotBody = document.getElementById("chatbotBody");
+const chatInput = document.getElementById("chatInput");
+const sendButton = document.getElementById("sendButton");
 
 /**
  * Menentukan warna batang berdasarkan skor kompetensi (0-100).
@@ -22,67 +44,54 @@ function getColor(value) {
  */
 function drawCompetencyChart() {
   const chartSvg = document.getElementById("competencyChart");
-  if (!chartSvg) return; // Hapus konten SVG sebelumnya
+  if (!chartSvg) return;
 
-  chartSvg.innerHTML = ""; // --- PERBAIKAN DIMULAI DI SINI --- // 1. Tentukan tinggi yang diinginkan untuk desktop vs mobile
-
-  const desktopHeight = 200; // Tinggi tetap untuk desktop (sesuai gambar awal)
-  const mobileMinHeight = 150; // Tinggi minimum di mobile
-
+  chartSvg.innerHTML = "";
+  const desktopHeight = 200;
+  const mobileMinHeight = 150;
   let svgHeight;
 
   if (window.innerWidth >= 1024) {
-    // --- Mode Desktop ---
-    // Paksa tinggi SVG kembali ke nilai desktop
     chartSvg.style.height = `${desktopHeight}px`;
-    chartSvg.style.minHeight = ""; // Hapus style min-height
+    chartSvg.style.minHeight = "";
     svgHeight = desktopHeight;
   } else {
-    // --- Mode Mobile ---
-    // Hapus tinggi tetap agar bisa mengisi container
-    chartSvg.style.height = ""; // Baca tinggi container saat ini
-
-    let currentHeight = chartSvg.clientHeight || mobileMinHeight; // Pastikan tinggi tidak terlalu pendek
+    chartSvg.style.height = "";
+    let currentHeight = chartSvg.clientHeight || mobileMinHeight;
 
     if (currentHeight < mobileMinHeight) {
       svgHeight = mobileMinHeight;
       chartSvg.style.minHeight = `${mobileMinHeight}px`;
     } else {
       svgHeight = currentHeight;
-      chartSvg.style.minHeight = ""; // Hapus style min-height
+      chartSvg.style.minHeight = "";
     }
-  } // --- PERBAIKAN SELESAI --- // Dapatkan dimensi aktual dari SVG (untuk responsif)
-  let svgWidth = chartSvg.clientWidth || 400; // Fallback // Logika 'if (svgHeight < minChartHeight)' yang lama sudah digantikan // oleh logika di atas. // Atur viewbox untuk responsivitas yang lebih baik
+  }
+  let svgWidth = chartSvg.clientWidth || 400;
 
   chartSvg.setAttribute("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
   chartSvg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 
-  if (svgWidth === 0 || svgHeight === 0) return; // Data kompetensi yang Anda berikan
+  if (svgWidth === 0 || svgHeight === 0) return;
 
   const labels = ["Data", "Policy", "Mgmt", "Comm", "Leadership"];
-  const values = [88, 72, 80, 66, 82]; // Skor simulasi (0-100)
-
+  const values = [88, 72, 80, 66, 82];
   const maxScore = 100;
-  const padding = 20; // Padding horizontal
-  const marginBottom = 30; // Ruang untuk label X
-  const marginTop = 20; // Ruang untuk label nilai
-
+  const padding = 20;
+  const marginBottom = 30;
+  const marginTop = 20;
   const chartAreaHeight = svgHeight - marginBottom - marginTop;
   const chartAreaWidth = svgWidth - 2 * padding;
-
-  const numBars = labels.length; // Kalkulasi barSpacing yang lebih dinamis
-  const totalBarWidth = chartAreaWidth * 0.7; // Total lebar untuk semua bar, 70% dari area
-  const gapWidth = chartAreaWidth * 0.3; // Total lebar untuk semua gap, 30% dari area
+  const numBars = labels.length;
+  const totalBarWidth = chartAreaWidth * 0.7;
+  const gapWidth = chartAreaWidth * 0.3;
   const barWidth = totalBarWidth / numBars;
-  const barGap = gapWidth / (numBars - 1); // Gap antara bar // Jika hanya ada 1 bar, maka barGap tidak relevan
-
-  const actualBarGap = numBars > 1 ? barGap : 0; // Sesuaikan barWidth agar minimal 20px atau maksimal 50px
-
-  const effectiveBarWidth = Math.max(20, Math.min(barWidth, 50)); // Hitung ulang total lebar yang dibutuhkan dan sesuaikan padding agar center
-
+  const barGap = gapWidth / (numBars - 1);
+  const actualBarGap = numBars > 1 ? barGap : 0;
+  const effectiveBarWidth = Math.max(20, Math.min(barWidth, 50));
   const totalContentWidth =
     effectiveBarWidth * numBars + actualBarGap * (numBars - 1);
-  const dynamicPadding = (svgWidth - totalContentWidth) / 2; // 1. Gambar Garis Sumbu X (Garis dasar)
+  const dynamicPadding = (svgWidth - totalContentWidth) / 2;
 
   const xAxisLine = document.createElementNS(svgNS, "line");
   xAxisLine.setAttribute("x1", dynamicPadding);
@@ -94,28 +103,27 @@ function drawCompetencyChart() {
 
   for (let i = 0; i < numBars; i++) {
     const value = values[i];
-    const color = getColor(value); // Posisi X dihitung berdasarkan dynamicPadding dan effectiveBarWidth/actualBarGap
+    const color = getColor(value);
     const barX = dynamicPadding + i * (effectiveBarWidth + actualBarGap);
-    const barCenter = barX + effectiveBarWidth / 2; // Hitung tinggi batang relatif terhadap area chart
-
+    const barCenter = barX + effectiveBarWidth / 2;
     const barHeight = (value / maxScore) * chartAreaHeight;
-    const barY = svgHeight - marginBottom - barHeight; // 2. Gambar Batang (Bar)
+    const barY = svgHeight - marginBottom - barHeight;
 
     const rect = document.createElementNS(svgNS, "rect");
-    rect.setAttribute("x", barX); // Mulai y dari bawah untuk animasi
+    rect.setAttribute("x", barX);
     rect.setAttribute("y", svgHeight - marginBottom);
     rect.setAttribute("width", effectiveBarWidth);
-    rect.setAttribute("height", 0); // Tinggi awal 0
+    rect.setAttribute("height", 0);
     rect.setAttribute("rx", 6);
     rect.setAttribute("ry", 6);
     rect.setAttribute("fill", color);
-    rect.style.transition = "height 1s ease-out, y 1s ease-out"; // Tambahkan animasi CSS
-    chartSvg.appendChild(rect); // Terapkan tinggi dan posisi Y setelah elemen ditambahkan untuk memicu transisi
+    rect.style.transition = "height 1s ease-out, y 1s ease-out";
+    chartSvg.appendChild(rect);
 
     setTimeout(() => {
       rect.setAttribute("height", barHeight);
       rect.setAttribute("y", barY);
-    }, 50); // 3. Gambar Label Sumbu X (Nama Kompetensi)
+    }, 50);
 
     const textLabel = document.createElementNS(svgNS, "text");
     textLabel.setAttribute("x", barCenter);
@@ -124,7 +132,7 @@ function drawCompetencyChart() {
     textLabel.setAttribute("font-size", "12");
     textLabel.setAttribute("fill", "#4b5563");
     textLabel.textContent = labels[i];
-    chartSvg.appendChild(textLabel); // 4. Gambar Label Nilai (Skor di atas bar)
+    chartSvg.appendChild(textLabel);
 
     const textValue = document.createElementNS(svgNS, "text");
     textValue.setAttribute("x", barCenter);
@@ -134,7 +142,7 @@ function drawCompetencyChart() {
     textValue.setAttribute("font-weight", "bold");
     textValue.setAttribute("fill", color);
     textValue.textContent = value;
-    textValue.style.opacity = 0; // Mulai tidak terlihat // Fade in setelah animasi bar selesai
+    textValue.style.opacity = 0;
     textValue.style.transition = "opacity 0.5s ease-in 0.8s";
     chartSvg.appendChild(textValue);
 
@@ -146,6 +154,7 @@ function drawCompetencyChart() {
 
 // 1. Sidebar Toggle Logic
 function toggleSidebar() {
+  if (!sideMenu || !backdrop || !hamburgerBtn) return;
   const isOpen = sideMenu.classList.toggle("open");
   backdrop.classList.toggle("visible", isOpen);
   if (isOpen) {
@@ -155,19 +164,35 @@ function toggleSidebar() {
   }
 }
 
-hamburgerBtn.addEventListener("click", toggleSidebar);
+if (hamburgerBtn) {
+  hamburgerBtn.addEventListener("click", toggleSidebar);
+}
+if (backdrop) {
+  backdrop.addEventListener("click", toggleSidebar);
+}
 
-// 2. Tab/Section Switching Logic
+// --- PERUBAHAN 2: Fungsi show() "pintar" (Role + Perbaikan Bug Awal) ---
 function show(id, button, closeMenu = true) {
+  // Logika untuk Role:
+  let targetId = id;
+  if (id === "dashboard") {
+    targetId =
+      currentUserRole === "admin" ? "dashboard-admin" : "dashboard-user";
+  }
+
   // Hide all sections
   sections.forEach((section) => {
     section.classList.add("hidden");
   });
 
-  // Show the target section
-  const targetSection = document.getElementById(id);
+  // Show the target section berdasarkan targetId
+  const targetSection = document.getElementById(targetId);
   if (targetSection) {
     targetSection.classList.remove("hidden");
+    // Jika yang ditampilkan adalah dashboard admin, gambar ulang chart-nya
+    if (targetId === "dashboard-admin") {
+      setTimeout(drawCompetencyChart, 50);
+    }
   }
 
   // Update active menu button state
@@ -176,43 +201,74 @@ function show(id, button, closeMenu = true) {
     button.classList.add("active");
   }
 
-  // Close sidebar on mobile after selection
+  // Perbaikan bug awal: only toggle jika closeMenu = true
   if (window.innerWidth < 1024 && closeMenu) {
     toggleSidebar();
   }
 }
 
-// Initialize: show dashboard on load and draw chart
+// --- Fungsi Logout Baru ---
+function logout() {
+  if (!loginPage || !appContainer) return;
+
+  // 1. Sembunyikan aplikasi
+  appContainer.classList.add("hidden");
+
+  // 2. Tampilkan halaman login
+  loginPage.classList.remove("hidden");
+  loginPage.style.opacity = 1; // Pastikan terlihat
+
+  // 3. Reset state
+  currentUserRole = "admin"; // Reset role ke default
+  if (dropdownRoleDisplay)
+    dropdownRoleDisplay.textContent = "Admin • Kementerian"; // Reset teks dropdown
+
+  // 4. Kosongkan field NIP dan fokus
+  const nipInput = document.getElementById("nip");
+  if (nipInput) {
+    nipInput.value = "";
+    nipInput.focus();
+  }
+
+  // 5. Tutup dropdown user
+  hideDropdown();
+}
+
+// Initialize:
 let resizeTimer;
 window.onload = function () {
-  show("dashboard", document.querySelector(".menu button.active"), false);
-  // Gambar Chart saat halaman dimuat
-  drawCompetencyChart();
+  // Jangan tampilkan dashboard saat load
+  // CUKUP FOKUS PADA INPUT NIP
+  const nipInput = document.getElementById("nip");
+  if (nipInput) {
+    nipInput.focus();
+  }
 };
 
-// 7. Responsiveness Logic: Gambar ulang Chart saat jendela diubah ukurannya
+// 7. Responsiveness Logic
 window.onresize = () => {
   clearTimeout(resizeTimer);
-  // Debounce untuk menghindari redraw yang terlalu sering
-  resizeTimer = setTimeout(drawCompetencyChart, 100);
+  // Tambahkan pengecekan apakah appContainer sudah terlihat
+  if (appContainer && !appContainer.classList.contains("hidden")) {
+    resizeTimer = setTimeout(drawCompetencyChart, 100);
+  }
 };
 
-// 3. User Dropdown Logic (NEW)
-const userDropdown = document.getElementById("userDropdown");
-const avatarBtn = document.getElementById("avatarBtn");
-
+// 3. User Dropdown Logic
 function toggleDropdown() {
+  if (!userDropdown || !avatarBtn) return;
   const isHidden = userDropdown.classList.toggle("hidden");
   avatarBtn.setAttribute("aria-expanded", isHidden ? "false" : "true");
 }
 
 function hideDropdown() {
+  if (!userDropdown || !avatarBtn) return;
   userDropdown.classList.add("hidden");
   avatarBtn.setAttribute("aria-expanded", "false");
 }
 
-// Close dropdown if user clicks outside
 document.addEventListener("click", function (event) {
+  if (!avatarBtn || !userDropdown) return;
   if (
     !avatarBtn.contains(event.target) &&
     !userDropdown.contains(event.target)
@@ -221,66 +277,91 @@ document.addEventListener("click", function (event) {
   }
 });
 
-// 4. Message Box/Modal Logic (Replacement for alert())
-const messageBox = document.getElementById("messageBox");
-const messageBoxTitle = document.getElementById("messageBoxTitle");
-const messageBoxContent = document.getElementById("messageBoxContent");
-
+// 4. Message Box/Modal Logic
 function showMessage(title, content) {
+  if (!messageBox || !messageBoxTitle || !messageBoxContent) return;
   messageBoxTitle.textContent = title;
   messageBoxContent.textContent = content;
   messageBox.classList.remove("hidden");
-  // Ensure the message box can be closed by pressing ESC
   document.addEventListener("keydown", closeOnEscape);
 }
 
 function closeMessageBox() {
+  if (!messageBox) return;
   messageBox.classList.add("hidden");
   document.removeEventListener("keydown", closeOnEscape);
 }
 
 function closeOnEscape(e) {
-  if (e.key === "Escape" && !messageBox.classList.contains("hidden")) {
+  if (
+    e.key === "Escape" &&
+    messageBox &&
+    !messageBox.classList.contains("hidden")
+  ) {
     closeMessageBox();
   }
 }
 
-// 5. Simulate Login Logic
+// --- Logika Login diperbarui untuk Role dan Halaman Login ---
 function simulateLogin() {
   const nipInput = document.getElementById("nip");
   const loginMsg = document.getElementById("loginMsg");
+
+  // Tambahkan pengecekan untuk elemen baru
+  if (!nipInput || !loginMsg || !loginPage || !appContainer) return;
+
   const nip = nipInput.value.trim();
+  let loginSuccess = false;
+  let message = "";
+  let roleName = "";
 
   if (nip === "198805012020012001") {
-    loginMsg.textContent =
-      "Login Berhasil! Mengarahkan ke Dashboard (simulasi).";
-    loginMsg.classList.remove("text-red-600");
-    loginMsg.classList.add("text-green-600");
-    // Simulate redirection to a new view/role change
-    showMessage(
-      "Login Berhasil",
-      `Berhasil masuk sebagai pengguna NIP: ${nip}. Role simulasi: Staf Ahli.`
-    );
-    // Automatically switch to the dashboard view
-    show("dashboard", document.querySelector(".menu button:nth-child(1)"));
+    // --- Role User ---
+    currentUserRole = "user";
+    loginSuccess = true;
+    roleName = "User ASN";
+    if (dropdownRoleDisplay)
+      dropdownRoleDisplay.textContent = "User • Staf Ahli";
+  } else if (nip === "0000000000000001") {
+    // NIP Admin Fiktif
+    // --- Role Admin ---
+    currentUserRole = "admin";
+    loginSuccess = true;
+    roleName = "Admin ASN";
+    if (dropdownRoleDisplay)
+      dropdownRoleDisplay.textContent = "Admin • Kementerian";
   } else if (nip === "") {
     loginMsg.textContent = "NIP tidak boleh kosong.";
     loginMsg.classList.remove("text-green-600");
     loginMsg.classList.add("text-red-600");
   } else {
     loginMsg.textContent =
-      "NIP tidak dikenal. Coba NIP contoh: 198805012020012001";
+      "NIP tidak dikenal. Coba '0000000000000001' atau '198805012020012001'.";
     loginMsg.classList.remove("text-green-600");
     loginMsg.classList.add("text-red-600");
   }
+
+  if (loginSuccess) {
+    // --- INI LOGIKA BARU SAAT SUKSES ---
+    loginMsg.textContent = ""; // Kosongkan pesan error
+
+    // 1. Sembunyikan Halaman Login
+    loginPage.classList.add("hidden");
+
+    // 2. Tampilkan Wadah Aplikasi
+    appContainer.classList.remove("hidden");
+
+    // 3. Panggil 'show' untuk menampilkan dashboard yang benar
+    // 'false' agar sidebar tidak toggle aneh saat login di mobile
+    show(
+      "dashboard",
+      document.querySelector(".menu button:nth-child(1)"),
+      false
+    );
+  }
 }
 
-// --- CHATBOT LOGIC (Updated with Initial Conversation) ---
-const chatbotWindow = document.getElementById("chatbotWindow");
-const chatbotBody = document.getElementById("chatbotBody");
-const chatInput = document.getElementById("chatInput");
-const sendButton = document.getElementById("sendButton");
-
+// --- CHATBOT LOGIC ---
 const initialConversation = [
   {
     text: "AI-Talenta: Halo, saya TalentaBot. Ada yang bisa saya bantu?",
@@ -290,20 +371,15 @@ const initialConversation = [
   {
     text: "ASN: Saya ingin tahu diklat apa yang cocok untuk jabatan saya.",
     type: "user",
-    delay: 2000, // Increased delay for better pacing
+    delay: 2000,
   },
   {
     text: "AI-Talenta: Berdasarkan data kompetensi Anda (Putri A), pelatihan Manajemen Data Publik direkomendasikan karena Anda memiliki gap di Data Engineering.",
     type: "ai",
-    delay: 4000, // Increased delay
+    delay: 4000,
   },
 ];
 
-/**
- * Menambahkan pesan ke jendela chat
- * @param {string} text - Isi pesan
- * @param {'ai'|'user'} type - Jenis pesan (ai/user)
- */
 function addMessage(text, type) {
   if (!chatbotBody) return;
   const msgDiv = document.createElement("div");
@@ -313,27 +389,18 @@ function addMessage(text, type) {
   );
   msgDiv.textContent = text;
   chatbotBody.appendChild(msgDiv);
-
-  // Animasikan pesan
   requestAnimationFrame(() => msgDiv.classList.add("visible"));
-
-  // Scroll ke bawah
   chatbotBody.scrollTop = chatbotBody.scrollHeight;
 }
 
-/**
- * Memuat dan menampilkan percakapan awal dengan delay.
- */
 function loadInitialConversation() {
-  if (!chatbotBody) return;
-  chatbotBody.innerHTML = ""; // Bersihkan pesan sebelumnya
+  if (!chatbotBody || !chatInput || !sendButton) return;
+  chatbotBody.innerHTML = "";
 
   initialConversation.forEach((msg) => {
     setTimeout(() => addMessage(msg.text, msg.type), msg.delay);
   });
 
-  // Setelah semua pesan selesai dimuat (atau setelah delay maksimum + sedikit),
-  // aktifkan input
   const maxDelay = initialConversation.reduce(
     (max, msg) => Math.max(max, msg.delay),
     0
@@ -345,18 +412,14 @@ function loadInitialConversation() {
   }, maxDelay + 500);
 }
 
-/**
- * Mengubah status (buka/tutup) jendela chatbot dan memuat percakapan.
- */
 function toggleChatbot() {
+  if (!chatbotWindow || !chatInput || !sendButton) return;
   const isOpen = chatbotWindow.classList.toggle("open");
 
   if (isOpen) {
     chatbotWindow.setAttribute("aria-hidden", "false");
-    // Nonaktifkan input saat pesan otomatis sedang dimuat
     chatInput.disabled = true;
     sendButton.disabled = true;
-
     loadInitialConversation();
   } else {
     chatbotWindow.setAttribute("aria-hidden", "true");
@@ -365,30 +428,30 @@ function toggleChatbot() {
   }
 }
 
-// Placeholder for sending message (using the simple logic now that input is enabled)
-sendButton.addEventListener("click", function () {
-  const message = chatInput.value.trim();
-  if (message) {
-    addMessage(message, "user"); // Tampilkan pesan user
-    chatInput.value = "";
+if (sendButton && chatInput) {
+  sendButton.addEventListener("click", function () {
+    const message = chatInput.value.trim();
+    if (message) {
+      addMessage(message, "user");
+      chatInput.value = "";
 
-    // Simulasi balasan AI setelah 1 detik
-    chatInput.disabled = true;
-    sendButton.disabled = true;
-    setTimeout(() => {
-      addMessage(
-        "TalentaBot: Mohon maaf, fitur pemrosesan pesan real-time sedang dalam tahap pengembangan.",
-        "ai"
-      );
-      chatInput.disabled = false;
-      sendButton.disabled = false;
-      chatInput.focus();
-    }, 1000);
-  }
-});
-// Mengizinkan kirim pesan dengan Enter
-chatInput.addEventListener("keypress", function (e) {
-  if (e.key === "Enter") {
-    sendButton.click();
-  }
-});
+      chatInput.disabled = true;
+      sendButton.disabled = true;
+      setTimeout(() => {
+        addMessage(
+          "TalentaBot: Mohon maaf, fitur pemrosesan pesan real-time sedang dalam tahap pengembangan.",
+          "ai"
+        );
+        chatInput.disabled = false;
+        sendButton.disabled = false;
+        chatInput.focus();
+      }, 1000);
+    }
+  });
+
+  chatInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      sendButton.click();
+    }
+  });
+}
