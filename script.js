@@ -22,31 +22,43 @@ function getColor(value) {
  */
 function drawCompetencyChart() {
   const chartSvg = document.getElementById("competencyChart");
-  if (!chartSvg) return;
+  if (!chartSvg) return; // Hapus konten SVG sebelumnya
 
-  // Hapus konten SVG sebelumnya
-  chartSvg.innerHTML = "";
+  chartSvg.innerHTML = ""; // --- PERBAIKAN DIMULAI DI SINI --- // 1. Tentukan tinggi yang diinginkan untuk desktop vs mobile
 
-  // Dapatkan dimensi aktual dari SVG (untuk responsif)
-  let svgWidth = chartSvg.clientWidth || 400; // Fallback
-  let svgHeight = chartSvg.clientHeight || 200; // Fallback. Tinggi dikurangi karena ada legend
+  const desktopHeight = 200; // Tinggi tetap untuk desktop (sesuai gambar awal)
+  const mobileMinHeight = 150; // Tinggi minimum di mobile
 
-  // Pastikan tinggi minimum untuk mencegah bar terlalu pendek
-  const minChartHeight = 150;
-  if (svgHeight < minChartHeight) {
-    svgHeight = minChartHeight;
-    chartSvg.style.minHeight = `${minChartHeight}px`; // Adjust container min-height
+  let svgHeight;
+
+  if (window.innerWidth >= 1024) {
+    // --- Mode Desktop ---
+    // Paksa tinggi SVG kembali ke nilai desktop
+    chartSvg.style.height = `${desktopHeight}px`;
+    chartSvg.style.minHeight = ""; // Hapus style min-height
+    svgHeight = desktopHeight;
   } else {
-    chartSvg.style.minHeight = ""; // Remove if not needed
-  }
+    // --- Mode Mobile ---
+    // Hapus tinggi tetap agar bisa mengisi container
+    chartSvg.style.height = ""; // Baca tinggi container saat ini
 
-  // Atur viewbox untuk responsivitas yang lebih baik
+    let currentHeight = chartSvg.clientHeight || mobileMinHeight; // Pastikan tinggi tidak terlalu pendek
+
+    if (currentHeight < mobileMinHeight) {
+      svgHeight = mobileMinHeight;
+      chartSvg.style.minHeight = `${mobileMinHeight}px`;
+    } else {
+      svgHeight = currentHeight;
+      chartSvg.style.minHeight = ""; // Hapus style min-height
+    }
+  } // --- PERBAIKAN SELESAI --- // Dapatkan dimensi aktual dari SVG (untuk responsif)
+  let svgWidth = chartSvg.clientWidth || 400; // Fallback // Logika 'if (svgHeight < minChartHeight)' yang lama sudah digantikan // oleh logika di atas. // Atur viewbox untuk responsivitas yang lebih baik
+
   chartSvg.setAttribute("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
   chartSvg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 
-  if (svgWidth === 0 || svgHeight === 0) return;
+  if (svgWidth === 0 || svgHeight === 0) return; // Data kompetensi yang Anda berikan
 
-  // Data kompetensi yang Anda berikan
   const labels = ["Data", "Policy", "Mgmt", "Comm", "Leadership"];
   const values = [88, 72, 80, 66, 82]; // Skor simulasi (0-100)
 
@@ -58,25 +70,20 @@ function drawCompetencyChart() {
   const chartAreaHeight = svgHeight - marginBottom - marginTop;
   const chartAreaWidth = svgWidth - 2 * padding;
 
-  const numBars = labels.length;
-  // Kalkulasi barSpacing yang lebih dinamis
+  const numBars = labels.length; // Kalkulasi barSpacing yang lebih dinamis
   const totalBarWidth = chartAreaWidth * 0.7; // Total lebar untuk semua bar, 70% dari area
   const gapWidth = chartAreaWidth * 0.3; // Total lebar untuk semua gap, 30% dari area
   const barWidth = totalBarWidth / numBars;
-  const barGap = gapWidth / (numBars - 1); // Gap antara bar
+  const barGap = gapWidth / (numBars - 1); // Gap antara bar // Jika hanya ada 1 bar, maka barGap tidak relevan
 
-  // Jika hanya ada 1 bar, maka barGap tidak relevan
-  const actualBarGap = numBars > 1 ? barGap : 0;
+  const actualBarGap = numBars > 1 ? barGap : 0; // Sesuaikan barWidth agar minimal 20px atau maksimal 50px
 
-  // Sesuaikan barWidth agar minimal 20px atau maksimal 50px
-  const effectiveBarWidth = Math.max(20, Math.min(barWidth, 50));
+  const effectiveBarWidth = Math.max(20, Math.min(barWidth, 50)); // Hitung ulang total lebar yang dibutuhkan dan sesuaikan padding agar center
 
-  // Hitung ulang total lebar yang dibutuhkan dan sesuaikan padding agar center
   const totalContentWidth =
     effectiveBarWidth * numBars + actualBarGap * (numBars - 1);
-  const dynamicPadding = (svgWidth - totalContentWidth) / 2;
+  const dynamicPadding = (svgWidth - totalContentWidth) / 2; // 1. Gambar Garis Sumbu X (Garis dasar)
 
-  // 1. Gambar Garis Sumbu X (Garis dasar)
   const xAxisLine = document.createElementNS(svgNS, "line");
   xAxisLine.setAttribute("x1", dynamicPadding);
   xAxisLine.setAttribute("y1", svgHeight - marginBottom);
@@ -87,19 +94,15 @@ function drawCompetencyChart() {
 
   for (let i = 0; i < numBars; i++) {
     const value = values[i];
-    const color = getColor(value);
-    // Posisi X dihitung berdasarkan dynamicPadding dan effectiveBarWidth/actualBarGap
+    const color = getColor(value); // Posisi X dihitung berdasarkan dynamicPadding dan effectiveBarWidth/actualBarGap
     const barX = dynamicPadding + i * (effectiveBarWidth + actualBarGap);
-    const barCenter = barX + effectiveBarWidth / 2;
+    const barCenter = barX + effectiveBarWidth / 2; // Hitung tinggi batang relatif terhadap area chart
 
-    // Hitung tinggi batang relatif terhadap area chart
     const barHeight = (value / maxScore) * chartAreaHeight;
-    const barY = svgHeight - marginBottom - barHeight;
+    const barY = svgHeight - marginBottom - barHeight; // 2. Gambar Batang (Bar)
 
-    // 2. Gambar Batang (Bar)
     const rect = document.createElementNS(svgNS, "rect");
-    rect.setAttribute("x", barX);
-    // Mulai y dari bawah untuk animasi
+    rect.setAttribute("x", barX); // Mulai y dari bawah untuk animasi
     rect.setAttribute("y", svgHeight - marginBottom);
     rect.setAttribute("width", effectiveBarWidth);
     rect.setAttribute("height", 0); // Tinggi awal 0
@@ -107,15 +110,13 @@ function drawCompetencyChart() {
     rect.setAttribute("ry", 6);
     rect.setAttribute("fill", color);
     rect.style.transition = "height 1s ease-out, y 1s ease-out"; // Tambahkan animasi CSS
-    chartSvg.appendChild(rect);
+    chartSvg.appendChild(rect); // Terapkan tinggi dan posisi Y setelah elemen ditambahkan untuk memicu transisi
 
-    // Terapkan tinggi dan posisi Y setelah elemen ditambahkan untuk memicu transisi
     setTimeout(() => {
       rect.setAttribute("height", barHeight);
       rect.setAttribute("y", barY);
-    }, 50);
+    }, 50); // 3. Gambar Label Sumbu X (Nama Kompetensi)
 
-    // 3. Gambar Label Sumbu X (Nama Kompetensi)
     const textLabel = document.createElementNS(svgNS, "text");
     textLabel.setAttribute("x", barCenter);
     textLabel.setAttribute("y", svgHeight - marginBottom + 18);
@@ -123,9 +124,8 @@ function drawCompetencyChart() {
     textLabel.setAttribute("font-size", "12");
     textLabel.setAttribute("fill", "#4b5563");
     textLabel.textContent = labels[i];
-    chartSvg.appendChild(textLabel);
+    chartSvg.appendChild(textLabel); // 4. Gambar Label Nilai (Skor di atas bar)
 
-    // 4. Gambar Label Nilai (Skor di atas bar)
     const textValue = document.createElementNS(svgNS, "text");
     textValue.setAttribute("x", barCenter);
     textValue.setAttribute("y", barY - 5);
@@ -134,8 +134,7 @@ function drawCompetencyChart() {
     textValue.setAttribute("font-weight", "bold");
     textValue.setAttribute("fill", color);
     textValue.textContent = value;
-    textValue.style.opacity = 0; // Mulai tidak terlihat
-    // Fade in setelah animasi bar selesai
+    textValue.style.opacity = 0; // Mulai tidak terlihat // Fade in setelah animasi bar selesai
     textValue.style.transition = "opacity 0.5s ease-in 0.8s";
     chartSvg.appendChild(textValue);
 
