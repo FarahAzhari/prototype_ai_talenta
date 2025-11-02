@@ -13,6 +13,16 @@ const sections = document.querySelectorAll(".tab-content");
 const menuButtons = document.querySelectorAll(".menu button");
 const svgNS = "http://www.w3.org/2000/svg";
 
+// --- Data Chart ---
+const ADMIN_CHART_DATA = {
+  labels: ["Tech", "Policy", "Mgmt", "Comm", "Leadership"],
+  values: [88, 72, 80, 59, 82],
+};
+const USER_CHART_DATA = {
+  labels: ["Tech", "Policy", "Mgmt", "Comm", "Leadership"],
+  values: [88, 72, 80, 66, 82],
+};
+
 // Dropdown
 const userDropdown = document.getElementById("userDropdown");
 const avatarBtn = document.getElementById("avatarBtn");
@@ -41,9 +51,11 @@ function getColor(value) {
 
 /**
  * Menggambar grafik batang (Bar Chart) responsif untuk Rata-rata Skor Kompetensi.
+ * @param {string} _svgId - ID dari elemen <svg>
+ * @param {object} data - Objek berisi { labels: [], values: [] }
  */
-function drawCompetencyChart() {
-  const chartSvg = document.getElementById("competencyChart");
+function drawCompetencyChart(svgId, data) {
+  const chartSvg = document.getElementById(svgId);
   if (!chartSvg) return;
 
   chartSvg.innerHTML = "";
@@ -74,8 +86,8 @@ function drawCompetencyChart() {
 
   if (svgWidth === 0 || svgHeight === 0) return;
 
-  const labels = ["Data", "Policy", "Mgmt", "Comm", "Leadership"];
-  const values = [88, 72, 80, 66, 82];
+  const labels = data.labels;
+  const values = data.values;
   const maxScore = 100;
   const padding = 20;
   const marginBottom = 30;
@@ -189,9 +201,16 @@ function show(id, button, closeMenu = true) {
   const targetSection = document.getElementById(targetId);
   if (targetSection) {
     targetSection.classList.remove("hidden");
-    // Jika yang ditampilkan adalah dashboard admin, gambar ulang chart-nya
+    // Panggil fungsi chart yang sama dengan data & ID yang berbeda
     if (targetId === "dashboard-admin") {
-      setTimeout(drawCompetencyChart, 50);
+      setTimeout(() => {
+        drawCompetencyChart("competencyChart", ADMIN_CHART_DATA);
+      }, 50);
+    }
+    if (targetId === "dashboard-user") {
+      setTimeout(() => {
+        drawCompetencyChart("userCompetencyChart", USER_CHART_DATA);
+      }, 50);
     }
   }
 
@@ -250,7 +269,15 @@ window.onresize = () => {
   clearTimeout(resizeTimer);
   // Tambahkan pengecekan apakah appContainer sudah terlihat
   if (appContainer && !appContainer.classList.contains("hidden")) {
-    resizeTimer = setTimeout(drawCompetencyChart, 100);
+    if (currentUserRole === "admin") {
+      resizeTimer = setTimeout(() => {
+        drawCompetencyChart("competencyChart", ADMIN_CHART_DATA);
+      }, 100);
+    } else {
+      resizeTimer = setTimeout(() => {
+        drawCompetencyChart("userCompetencyChart", USER_CHART_DATA);
+      }, 100);
+    }
   }
 };
 
