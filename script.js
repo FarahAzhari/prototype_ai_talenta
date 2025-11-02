@@ -159,7 +159,7 @@ function toggleSidebar() {
 hamburgerBtn.addEventListener("click", toggleSidebar);
 
 // 2. Tab/Section Switching Logic
-function show(id, button) {
+function show(id, button, closeMenu = true) {
   // Hide all sections
   sections.forEach((section) => {
     section.classList.add("hidden");
@@ -178,7 +178,7 @@ function show(id, button) {
   }
 
   // Close sidebar on mobile after selection
-  if (window.innerWidth < 1024) {
+  if (window.innerWidth < 1024 && closeMenu) {
     toggleSidebar();
   }
 }
@@ -186,7 +186,7 @@ function show(id, button) {
 // Initialize: show dashboard on load and draw chart
 let resizeTimer;
 window.onload = function () {
-  show("dashboard", document.querySelector(".menu button.active"));
+  show("dashboard", document.querySelector(".menu button.active"), false);
   // Gambar Chart saat halaman dimuat
   drawCompetencyChart();
 };
