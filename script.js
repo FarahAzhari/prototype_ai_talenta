@@ -308,7 +308,7 @@ document.addEventListener("click", function (event) {
 function showMessage(title, content) {
   if (!messageBox || !messageBoxTitle || !messageBoxContent) return;
   messageBoxTitle.textContent = title;
-  messageBoxContent.textContent = content;
+  messageBoxContent.innerHTML = content;
   messageBox.classList.remove("hidden");
   document.addEventListener("keydown", closeOnEscape);
 }
@@ -386,6 +386,83 @@ function simulateLogin() {
       false
     );
   }
+}
+
+// --- Fungsi untuk Explainable AI (XAI) ---
+function showXAI(person) {
+  let title = "Penjelasan AI";
+  let content = "Data tidak ditemukan.";
+
+  const greenCheck =
+    "<span style='color: #10b981; margin-right: 4px;'>✔</span>";
+  const redX = "<span style='color: #ef4444; margin-right: 4px;'>✖</span>";
+  const warn = "<span style='color: #f59e0b; margin-right: 4px;'>!</span>";
+
+  switch (person) {
+    case "putri":
+      title = "Penjelasan AI: Putri A (Skor 92)";
+      content = `
+        Skor <strong>Sangat Cocok (92)</strong> dibentuk dari:<br><br>
+        <strong>1. KECOCOKAN SKILL (Bobot: 70%)</strong><br>
+        ${greenCheck} <strong>Kecocokan Jabatan:</strong> 95% (Sangat Tinggi)<br>
+        ${greenCheck} <strong>Kompetensi Kunci:</strong> Memenuhi (Data Science, Mgmt Proyek, Leadership)<br><br>
+        <strong>2. PREDIKSI KINERJA (Bobot: 30%)</strong><br>
+        ${greenCheck} <strong>Prediksi Kinerja 1 Thn:</strong> Sangat Baik<br>
+        ${greenCheck} <strong>Risiko Stagnasi:</strong> Rendah<br>
+      `;
+      break;
+
+    case "agus":
+      title = "Penjelasan AI: Agus S (Skor 90)";
+      content = `
+        Skor <strong>Cocok (90)</strong> dibentuk dari:<br><br>
+        <strong>1. KECOCOKAN SKILL (Bobot: 70%)</strong><br>
+        ${greenCheck} <strong>Kecocokan Jabatan:</strong> 90% (Sangat Tinggi)<br>
+        ${redX} <strong>Kompetensi Kunci:</strong> Kurang (Leadership: 75)<br><br>
+        <strong>2. PREDIKSI KINERJA (Bobot: 30%)</strong><br>
+        ${greenCheck} <strong>Prediksi Kinerja 1 Thn:</strong> Sangat Baik<br>
+        ${warn} <strong>Catatan Fairness:</strong> Perlu dicek (kategori 'Check').
+      `;
+      break;
+
+    case "rina":
+      title = "Penjelasan AI: Rina T (Skor 89)";
+      content = `
+        Skor <strong>Cocok (89)</strong> dibentuk dari:<br><br>
+        <strong>1. KECOCOKAN SKILL (Bobot: 70%)</strong><br>
+        ${greenCheck} <strong>Kecocokan Jabatan:</strong> 88% (Tinggi)<br>
+        ${greenCheck} <strong>Kompetensi Kunci:</strong> Memenuhi<br><br>
+        <strong>2. PREDIKSI KINERJA (Bobot: 30%)</strong><br>
+        ${greenCheck} <strong>Prediksi Kinerja 1 Thn:</strong> Baik<br>
+        ${greenCheck} <strong>Risiko Stagnasi:</strong> Rendah<br>
+      `;
+      break;
+
+    case "dedi":
+      title = "Penjelasan AI: Dedi R (Skor 88)";
+      content = `
+        Skor <strong>Cocok (88)</strong> dibentuk dari:<br><br>
+        <strong style='color: #ef4444;'>PERINGATAN FAIRNESS (BIAS DETECTED)</strong><br>
+        ${warn} Model AI mendeteksi potensi bias berdasarkan data historis untuk profil serupa (usia/gender) pada jabatan ini. Skor mungkin tidak akurat.<br><br>
+        <strong>Rekomendasi:</strong> Lakukan review manual oleh panel HR.
+      `;
+      break;
+
+    case "sari":
+      title = "Penjelasan AI: Sari L (Skor 86)";
+      content = `
+        Skor <strong>Cukup Cocok (86)</strong> dibentuk dari:<br><br>
+        <strong>1. KECOCOKAN SKILL (Bobot: 70%)</strong><br>
+        ${greenCheck} <strong>Kecocokan Jabatan:</strong> 85% (Tinggi)<br>
+        ${warn} <strong>Kompetensi Kunci:</strong> Perlu Peningkatan (Mgmt Proyek: 72)<br><br>
+        <strong>2. PREDIKSI KINERJA (Bobot: 30%)</strong><br>
+        ${greenCheck} <strong>Prediksi Kinerja 1 Thn:</strong> Baik<br>
+        ${greenCheck} <strong>Risiko Stagnasi:</strong> Rendah<br>
+      `;
+      break;
+  }
+
+  showMessage(title, content);
 }
 
 // --- CHATBOT LOGIC ---
