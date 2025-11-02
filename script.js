@@ -556,26 +556,65 @@ function toggleChatbot() {
   }
 }
 
+// --- FUNGSI BARU UNTUK MERESPONS CHAT ---
+function getChatbotResponse(message) {
+  const lowerMessage = message.toLowerCase();
+
+  // Cek jika role bukan 'user', berikan jawaban umum
+  if (currentUserRole !== "user") {
+    return "Mohon maaf, saya hanya bisa memberikan data personal jika Anda login sebagai User ASN.";
+  }
+
+  // Cek kata kunci
+  if (
+    lowerMessage.includes("diklat") ||
+    lowerMessage.includes("pelatihan") ||
+    lowerMessage.includes("training") ||
+    lowerMessage.includes("skill gap")
+  ) {
+    return "Berdasarkan analisis profil Anda (Putri A), Anda memiliki 'skill gap' di Data Engineering. Rekomendasi pelatihan prioritas Anda adalah: \n1. Pelatihan Data Engineering (40 jam). \n2. Workshop Leadership (16 jam).";
+  } else if (
+    lowerMessage.includes("karier") ||
+    lowerMessage.includes("jabatan") ||
+    lowerMessage.includes("promosi")
+  ) {
+    return "Jalur karier yang direkomendasikan sistem untuk Anda saat ini adalah promosi menjadi Kepala Subbid, dengan estimasi waktu 6-12 bulan.";
+  } else if (
+    lowerMessage.includes("skor") ||
+    lowerMessage.includes("ai-score")
+  ) {
+    return "AI-Score Anda saat ini adalah 92, dengan potensi 'Sangat Tinggi'. Ini adalah skor yang sangat baik.";
+  } else {
+    return "Mohon maaf, saya belum dilatih untuk menjawab pertanyaan itu. Anda bisa bertanya tentang 'diklat', 'karier', atau 'skor' Anda.";
+  }
+}
+
 if (sendButton && chatInput) {
-  sendButton.addEventListener("click", function () {
+  // Fungsi untuk mengirim pesan
+  const handleSend = () => {
     const message = chatInput.value.trim();
     if (message) {
-      addMessage(message, "user");
-      chatInput.value = "";
+      addMessage(message, "user"); // Tampilkan pesan user
+      chatInput.value = ""; // Kosongkan input
 
       chatInput.disabled = true;
       sendButton.disabled = true;
+
+      // Simulasi AI berpikir
       setTimeout(() => {
-        addMessage(
-          "TalentaBot: Mohon maaf, fitur pemrosesan pesan real-time sedang dalam tahap pengembangan.",
-          "ai"
-        );
+        const aiResponse = getChatbotResponse(message); // Dapatkan respons AI
+        addMessage(aiResponse, "ai"); // Tampilkan respons AI
+
+        // Aktifkan kembali input
         chatInput.disabled = false;
         sendButton.disabled = false;
         chatInput.focus();
-      }, 1000);
+      }, 1200); // Jeda 1.2 detik
     }
-  });
+  };
+
+  // Tambahkan event listener
+  sendButton.addEventListener("click", handleSend);
 
   chatInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
